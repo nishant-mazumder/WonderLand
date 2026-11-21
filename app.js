@@ -1,0 +1,96 @@
+const express = require("express");
+const app = express();
+const path = require("path");
+const mongoose = require("mongoose");  
+const Listing = require("./models/listing.js");
+const methodOverride = require("method-override");
+
+let port = 8080; 
+
+app.listen(port, () => {  
+    console.log(`Server running at ${port}`);
+})
+
+//middleware to parse data fetched from POST method
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/views"));
+
+app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static("public/css"));
+// app.use(express.static("public/js"));
+
+//method-override
+app.use(methodOverride("_method"));
+
+//ejs-mate
+const ejsMate = require("ejs-mate");
+app.engine("ejs", ejsMate);
+app.set("view engine", "ejs");
+
+//mongoose connection
+main()
+    .then(() => {
+        console.log("MongoDB connection successful");
+    })
+    .catch(err => console.log(err));
+
+async function main() {
+    await mongoose.connect("mongodb://127.0.0.1:27017/airbnb"); //db name at last
+}
+
+
+//ROUTING PART
+
+app.get("/", (req,res) => {
+    res.send("working");
+})
+
+//Index route
+app.get("/listings", async (req,res) => {
+    const allListings = await Listing.find({});
+    res.render(("listings/index.ejs"), {allListings});
+})
+
+//New Route
+app.get("/listings/new", (req,res) => {
+    res.render("listings/new.ejs");
+})
+
+//ADD
+app.post("/listings/add", async (req,res) => {
+    const newlisting = new Listing(req.body.listing);
+    await newlisting.save();
+    res.redirect("/listings");
+})
+
+//Show Route
+app.get("/listings/:id", async (req,res) => {
+    let {id} = req.params;
+    const listing = await Listing.findById(id);
+    res.render(("listings/show.ejs"), {listing});
+})
+
+//edit
+app.get("/listings/:id/edit", async (req,res) => {
+    let {id} = req.params;
+    const listing = await Listing.findById(id);
+    res.render("listings/edit.ejs", {listing});
+})
+
+//update
+app.put("/listings/:id", async (req,res) => {
+    let {id} = req.params;
+    await Listing.findByIdAndUpdate(id, {...req.body.listing});
+    res.redirect(`/listings/${id}`);
+})
+
+//DELETE
+app.delete("/listings/:id", async (req,res) => {
+    let {id} = req.params;
+    await Listing.findByIdAndDelete(id);
+    res.redirect("/listings");
+})
+
