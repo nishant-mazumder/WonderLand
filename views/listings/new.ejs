@@ -7,11 +7,15 @@
                 <div>
                     <label for="title" class="form-label">Title</label>
                     <input type="text" name="listing[title]" placeholder="Enter Name" class="form-control" required> 
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please enter a title for your listing</div>
                 </div>
                 <br> 
                 <div>
                     <label for="description" class="form-label">Description</label>
                     <textarea name="listing[description]" placeholder="Enter Description" class="form-control" required></textarea>
+                    <div class="valid-feedback">Great! Your description is ready.</div>
+                    <div class="invalid-feedback">Please provide a description of your property</div>
                 </div>
                 <br> 
                 <div>
@@ -28,17 +32,20 @@
                     <div class="col-md-6">
                         <label for="price" class="form-label">Price</label>
                         <input type="number" name="listing[price]" placeholder="Enter Price" class="form-control" required> 
+                        <div class="invalid-feedback">Please enter a valid price greater than 0</div>
                     </div>
                     
                     <div class="col-md-6">
                         <label for="country" class="form-label">Country</label>
                         <input type="text" name="listing[country]" placeholder="Enter Country" class="form-control" required> 
+                        <div class="invalid-feedback">Please enter the country where the property is located</div>
                     </div>
                 </div>
                 <br> 
                 <div>
                     <label for="location" class="form-label">Location</label>
-                    <input type="text" name="listing[location]" placeholder="Enter Location" class="form-control" required> 
+                    <input type="text" name="listing[location]" placeholder="Enter Location" class="form-control" required>
+                    <div class="invalid-feedback">Please enter the property's location</div> 
                 </div>
                 <br> 
                 
